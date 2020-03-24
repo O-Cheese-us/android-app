@@ -17,6 +17,9 @@ import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
 
+    val db = FirebaseFirestore.getInstance()
+    val TAG = "RegisterActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -26,14 +29,14 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         already_have_account_textView_register.setOnClickListener{
-            Log.d("Register", "Try to show login activity")
+            Log.d(TAG, "Try to show login activity")
             // launch the login activity
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
 
         selectphoto_button_register.setOnClickListener {
-            Log.d("Register", "Try to show photo selector")
+            Log.d(TAG, "Try to show photo selector")
 
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
@@ -49,13 +52,13 @@ class RegisterActivity : AppCompatActivity() {
 
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             // proceed and check what selected image was...
-            Log.d("Register", "Photo was selected.")
+            Log.d(TAG, "Photo was selected.")
 
             selectedPhotoUri = data.data
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
+            photo_imageview_register.setImageBitmap(bitmap)
+            selectphoto_button_register.alpha = 0f
 
-            val bitmapDrawable = BitmapDrawable(resources, bitmap)
-            selectphoto_button_register.background = bitmapDrawable
         }
     }
 
@@ -68,8 +71,8 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 
-        Log.d("Register", "Email is $email")
-        Log.d("Register", "Password is $password")
+        Log.d(TAG, "Email is $email")
+        Log.d(TAG, "Password is $password")
 
 
         // Firebase Authentication
@@ -80,18 +83,18 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
                 // else if successful
-                Log.d("Register", "Successfully created user with UID: ${it.result?.user?.uid}")
+                Log.d(TAG, "Successfully created user with UID: ${it.result?.user?.uid}")
                 uploadImageToFirebaseStorage()
             }
             .addOnFailureListener {
-                Log.d("Register", "Failed to create user: ${it.message}")
+                Log.d(TAG, "Failed to create user: ${it.message}")
                 Toast.makeText(this, "Failed to create user: ${it.message}", Toast.LENGTH_LONG).show()
             }
     }
 
     private fun uploadImageToFirebaseStorage() {
 
-        Log.d("Register", "Got selected photo uri: $selectedPhotoUri")
+        Log.d(TAG, "Got selected photo uri: $selectedPhotoUri")
 
         if (selectedPhotoUri == null) {
             return
@@ -102,19 +105,39 @@ class RegisterActivity : AppCompatActivity() {
 
         ref.putFile(selectedPhotoUri!!)
             .addOnSuccessListener {
-                Log.d("Register", "Successfully upload image: ${it.metadata?.path}")
+                Log.d(TAG, "Successfully upload image: ${it.metadata?.path}")
 
                 ref.downloadUrl.addOnSuccessListener {
-                    Log.d("Register", "File Location: $it")
+                    Log.d(TAG, "File Location: $it")
 
-                    saveUserToFirestore()
+                    saveUserToFirestore(it.toString())
                 }
 
+            }.addOnFailureListener {
+                    e -> Log.w(TAG, "Error writing document", e)
             }
 
     }
 
-    private fun saveUserToFirestore() {
-        //FirebaseFirestore.getInstance().getR
+    private fun saveUserToFirestore(profileImageUrl: String) {
+
+        val uid = FirebaseAuth.getInstance().uid ?: ""
+
+        val user2 = User(uid, username_edittext_register.text.toString(), profileImageUrl, 0)
+
+        val userMap = hashMapOf(
+            "uid" to uid,
+            "username" to username_edittext_register.text.toString(),
+            "cheeseCounter" to 0,
+            "profileImageUrl" to profileImageUrl
+
+            )
+
+
+        db.collection("users").document("$uid").set(userMap)
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written, yo cheese man!")}
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 }
+
+class User(val uid: String, val username: String, val profileImageUrl: String, val cheeseCounter: Int)
