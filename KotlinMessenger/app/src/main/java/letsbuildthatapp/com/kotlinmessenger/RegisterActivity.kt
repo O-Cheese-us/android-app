@@ -95,7 +95,7 @@ class RegisterActivity : AppCompatActivity() {
                     val uid = it.result?.user?.uid
                     Log.d(TAG, "Successfully created user with UID: $uid")
                     storeUserInFireStore(uid!!, username)
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    startActivity(Intent(this, CounterActivity::class.java))
                 }
             }
             .addOnFailureListener {
