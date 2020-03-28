@@ -11,6 +11,9 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_register.*
+import letsbuildthatapp.com.kotlinmessenger.data.USER_CHEESE_COUNTER
+import letsbuildthatapp.com.kotlinmessenger.data.USER_UID
+import letsbuildthatapp.com.kotlinmessenger.data.USER_USERNAME
 
 private const val TAG = "RegisterActivity"
 
@@ -107,9 +110,9 @@ class RegisterActivity : AppCompatActivity() {
     private fun storeUserInFireStore(uid: String, username: String) {
 
         val user = hashMapOf(
-            "uid" to uid,
-            "username" to username_edittext_register.text.toString(),
-            "cheesecounter" to 0
+            USER_UID to uid,
+            USER_USERNAME to username_edittext_register.text.toString(),
+            USER_CHEESE_COUNTER to 0
         )
 
         db.collection("users").document("$uid").set(user)

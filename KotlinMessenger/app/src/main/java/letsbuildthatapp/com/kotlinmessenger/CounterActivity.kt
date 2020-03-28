@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_counter.*
 import kotlinx.android.synthetic.main.content_home.*
+import letsbuildthatapp.com.kotlinmessenger.data.*
 
 private const val TAG = "CounterActivity"
 
@@ -29,52 +31,41 @@ class CounterActivity : AppCompatActivity() {
 
     private fun incrementCheeseCounter() {
 
-        val incrementedValue = counter_edittext_cheesecounter.text.toString().toInt() + 1
-        counter_edittext_cheesecounter.setText(incrementedValue.toString())
+        //val incrementedValue = counter_edittext_cheesecounter.text.toString().toInt() + 1
+        //counter_edittext_cheesecounter.setText(incrementedValue.toString())
 
         val uid = FirebaseAuth.getInstance().uid ?: ""
 
-        val user = hashMapOf(
-            "uid" to uid,
-            "cheesecounter" to incrementedValue
-        )
-
-        db.collection("users").document("$uid").set(user)
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written, yo cheese man!")}
-            .addOnFailureListener {
-                    e -> Log.w(TAG, "Error writing document", e)
+        db.collection(COLLECTION_USERS).document("$uid").update(USER_CHEESE_COUNTER, FieldValue.increment(1))
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written, yo cheese man! $it")}
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e)
                 return@addOnFailureListener
             }
 
     }
 
     private fun initCheeseCounter() {
+
         Log.d(TAG, "Initializing cheese counter...")
         val uid = FirebaseAuth.getInstance().uid ?: ""
-        val docRef = db.collection("users").document(uid)
-        docRef.get()
-            .addOnSuccessListener { doc ->
-                if (doc != null) {
-                    Log.d(TAG, "Found data : ${doc.data}")
-                    var user = doc.toObject(User::class.java)
-                    if (user?.cheesecounter != null){
-                        val currentCheeseCount = user?.cheesecounter
-                        counter_edittext_cheesecounter.setText(user?.cheesecounter?.toString())
-                    }
-                } else {
-                    Log.d(TAG, "No such document")
+        val docRef = db.collection(COLLECTION_USERS).document(uid)
+
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed: ", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()){
+                Log.d(TAG, "Current data: ${snapshot.data}")
+                var user = snapshot.toObject(User::class.java)
+                if (user?.cheeseCounter != null){
+                    counter_edittext_cheesecounter.setText(user?.cheeseCounter?.toString())
                 }
+            } else {
+                Log.d(TAG, "Current data: null")
             }
-            .addOnFailureListener {
-                exception -> Log.d(TAG, "Got exception ", exception)
-            }
-
+        }
     }
-
-    data class User(
-        var uid: String = "",
-        var username: String = "",
-        var cheesecounter: Int = 0
-    )
 
 }
