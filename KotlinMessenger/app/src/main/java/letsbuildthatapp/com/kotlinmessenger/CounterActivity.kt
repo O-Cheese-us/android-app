@@ -31,9 +31,6 @@ class CounterActivity : AppCompatActivity() {
 
     private fun incrementCheeseCounter() {
 
-        //val incrementedValue = counter_edittext_cheesecounter.text.toString().toInt() + 1
-        //counter_edittext_cheesecounter.setText(incrementedValue.toString())
-
         val uid = FirebaseAuth.getInstance().uid ?: ""
 
         db.collection(COLLECTION_USERS).document("$uid").update(USER_CHEESE_COUNTER, FieldValue.increment(1))

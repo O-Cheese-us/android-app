@@ -21,30 +21,59 @@ class RegisterActivity : AppCompatActivity() {
 
     private val db = FirebaseFirestore.getInstance()
 
+    private val firebaseAuth = FirebaseAuth.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        register_button_register.setOnClickListener{
-            performRegister()
-        }
 
-        already_have_account_textView_register.setOnClickListener{
-            Log.d(TAG, "Try to show login activity")
-            // launch the login activity
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        }
+        if (firebaseAuth.currentUser == null)
 
-        selectphoto_button_register.setOnClickListener {
-            Log.d(TAG, "Try to show photo selector")
+        Log.d(TAG, "Trying to sign in anonymously!")
 
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            startActivityForResult(intent, 0)
+        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener{
+
+            if (it.isSuccessful){
+                Log.d(TAG, "Frohlocket!")
+            } else {
+                Log.d(TAG, "Da is was schiaf ganga! ${it.exception}")
+            }
 
         }
+
+        FirebaseAuth.getInstance().addAuthStateListener {
+            it -> Log.d(TAG, "Got user: ${it}")
+        }
+
+
+
+
+
+
+//
+//        register_button_register.setOnClickListener{
+//            performRegister()
+//        }
+//
+//        already_have_account_textView_register.setOnClickListener{
+//            Log.d(TAG, "Try to show login activity")
+//            // launch the login activity
+//            val intent = Intent(this, LoginActivity::class.java)
+//            startActivity(intent)
+//        }
+//
+//        selectphoto_button_register.setOnClickListener {
+//            Log.d(TAG, "Try to show photo selector")
+//
+//            val intent = Intent(Intent.ACTION_PICK)
+//            intent.type = "image/*"
+//            startActivityForResult(intent, 0)
+//
+//        }
     }
+
+    
 
     var selectedPhotoUri: Uri? = null;
 
