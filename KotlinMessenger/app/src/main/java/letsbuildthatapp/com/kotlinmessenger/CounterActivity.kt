@@ -19,32 +19,30 @@ class CounterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "Opened CounterActivity")
-        setContentView(R.layout.activity_counter)
 
+        setContentView(R.layout.activity_counter)
         initCheeseCounter()
 
         counter_button_kasgfressn.setOnClickListener{
             incrementCheeseCounter()
         }
-
     }
 
     private fun incrementCheeseCounter() {
-
         val uid = FirebaseAuth.getInstance().uid ?: ""
 
+        Log.d(TAG, "Incrementing cheese counter for user with UID $uid")
+
         db.collection(COLLECTION_USERS).document("$uid").update(USER_CHEESE_COUNTER, FieldValue.increment(1))
-            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written, yo cheese man! $it")}
-            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e)
+            .addOnSuccessListener { Log.d(TAG, "Increment successful: $it")}
+            .addOnFailureListener { e -> Log.w(TAG, "Error while incrementing cheese counter for user $uid: ", e)
                 return@addOnFailureListener
             }
-
     }
 
     private fun initCheeseCounter() {
-
-        Log.d(TAG, "Initializing cheese counter...")
         val uid = FirebaseAuth.getInstance().uid ?: ""
+        Log.d(TAG, "Initializing cheese counter for user $uid...")
         val docRef = db.collection(COLLECTION_USERS).document(uid)
 
         docRef.addSnapshotListener { snapshot, e ->
