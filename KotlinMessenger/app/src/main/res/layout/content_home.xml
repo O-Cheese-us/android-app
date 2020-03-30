@@ -18,29 +18,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
-    <Button
-        android:id="@+id/button_kasgfressn"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="256dp"
-        android:background="@drawable/rounded_select_photo"
-        android:text="KAS GFRESSN"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edittext_cheesecounter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="30"
-        android:inputType="none"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@+id/button_kasgfressn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/nav_host_fragment" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,11 +23,8 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        //Log.d(TAG, "UID Before login: ${auth.uid}")
-
         if (auth.currentUser == null){
-            signInAnonymously()
-            //storeUserInFireStore()
+            signUpAnonymously()
         } else {
             Log.d(TAG,"Already logged in with user UID = ${auth.currentUser!!.uid}")
         }
@@ -46,7 +43,7 @@ class SplashScreenActivity : AppCompatActivity() {
             override fun run () {
                 try {
                     sleep(2000)
-                    val intent = Intent(baseContext, CounterActivity::class.java)
+                    val intent = Intent(baseContext, HomeActivity::class.java)
                     startActivity(intent)
                 } catch (e: Exception) {
                     Log.d(TAG, "Got exception during splash screen animations:  $e")
@@ -57,7 +54,7 @@ class SplashScreenActivity : AppCompatActivity() {
     }
 
 
-    private fun signInAnonymously(){
+    private fun signUpAnonymously(){
 
         Log.d(TAG, "Trying to sign in anonymously...")
         FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener{

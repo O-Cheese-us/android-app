@@ -49,8 +49,6 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        //initCheeseCounter()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -59,31 +57,8 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
-    fun initCheeseCounter() {
-        val uid = FirebaseAuth.getInstance().uid ?: ""
-        val docRef = db.collection("users").document(uid)
-        docRef.get()
-            .addOnSuccessListener { doc ->
-                if (doc != null) {
-                    Log.d(TAG, "Found data : ${doc.data}")
-                    var user = doc.toObject(User::class.java)
-                    if (user?.cheesecounter != null){
-                        edittext_cheesecounter.setText(user?.cheesecounter)
-                    }
-
-                }
-            }
-
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
-    data class User(
-        var username: String = "",
-        var cheesecounter: Int = 0
-    )
-
 }
