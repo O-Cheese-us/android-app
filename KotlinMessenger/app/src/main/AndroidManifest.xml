@@ -11,13 +11,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ProfilePictureActivity"></activity>
+        <activity android:name=".UsernameActivity" />
+        <activity android:name=".LinkAccountActivity" />
+        <activity android:name=".MenuActivity" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".HodenActivity" />
         <activity android:name=".CounterActivity" />
@@ -25,9 +28,7 @@
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".RegisterActivity">
-
-        </activity>
+        <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
     </application>
 

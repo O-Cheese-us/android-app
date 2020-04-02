@@ -43,7 +43,7 @@ class SplashScreenActivity : AppCompatActivity() {
             override fun run () {
                 try {
                     sleep(2000)
-                    val intent = Intent(baseContext, HomeActivity::class.java)
+                    val intent = Intent(baseContext, MenuActivity::class.java)
                     startActivity(intent)
                 } catch (e: Exception) {
                     Log.d(TAG, "Got exception during splash screen animations:  $e")
