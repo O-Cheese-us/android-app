@@ -1,2 +1,2 @@
-rootProject.name='KotlinMessenger'
+rootProject.name='OCheeseUs'
 include ':ocheeseus'
