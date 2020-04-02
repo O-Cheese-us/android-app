@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "900960262358",
+    "firebase_url": "https://o-cheese-us.firebaseio.com",
+    "project_id": "o-cheese-us",
+    "storage_bucket": "o-cheese-us.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900960262358:android:3d24ac98193a7d7f7d1177",
+        "android_client_info": {
+          "package_name": "us.oh.ocheeseus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900960262358-lsu2quccnjdtd63e1p2v1opefcoksh8s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXSmyot2lF37vg47hFbFZ8z4RWlEbeoyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900960262358-lsu2quccnjdtd63e1p2v1opefcoksh8s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
