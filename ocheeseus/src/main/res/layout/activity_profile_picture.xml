@@ -6,4 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".ProfilePictureActivity">
 
+    <Button
+        android:id="@+id/button_profilePicture_select"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/rounded_select_photo"
+        android:text="SELECT PHOTO"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageview_profilePicture_profilePicture"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:civ_border_width="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/button_profilePicture_select"
+        app:layout_constraintEnd_toEndOf="@+id/button_profilePicture_select"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button_profilePicture_select" />
+
+    <Button
+        android:id="@+id/button_profilePicture_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="Upload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_profilePicture_select" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
