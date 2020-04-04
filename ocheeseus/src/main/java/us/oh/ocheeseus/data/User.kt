@@ -13,7 +13,7 @@ data class User(
     val uid: String = "",
     var username: String = "",
     var cheeseCounter: Int = 0,
-    var profilePictureUrl: Uri? = null
+    var profilePictureUrl: String = ""
 ){
 
 }

@@ -26,5 +26,14 @@ class MenuActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        button_menu_cheese_counter.setOnClickListener {
+            val intent = Intent(baseContext, CounterActivity::class.java)
+            startActivity(intent)
+        }
+
+        button_menu_navigation_menu.setOnClickListener {
+            val intent = Intent(baseContext, HomeActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

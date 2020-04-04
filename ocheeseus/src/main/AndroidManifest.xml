@@ -22,14 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="us.oh.ocheeseus.HodenActivity" />
         <activity android:name="us.oh.ocheeseus.CounterActivity" />
         <activity
             android:name="us.oh.ocheeseus.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="us.oh.ocheeseus.RegisterActivity" />
-        <activity android:name="us.oh.ocheeseus.LoginActivity" />
     </application>
 
 </manifest>

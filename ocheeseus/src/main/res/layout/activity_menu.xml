@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MenuActivity">
 
-    <!-- REGISTER BUTTON -->
+    <!-- LINK ACCOUNT -->
     <Button
         android:id="@+id/button_menu_link_account"
         android:layout_width="0dp"
@@ -22,6 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- ADD USERNAME -->
     <Button
         android:id="@+id/button_menu_add_username"
         android:layout_width="0dp"
@@ -38,6 +39,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_menu_link_account" />
 
+    <!-- UPLOAD PROFILE PICTURE -->
     <Button
         android:id="@+id/button_menu_upload_profile_picture"
         android:layout_width="0dp"
@@ -54,5 +56,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_menu_add_username" />
 
+    <!-- CHEESE COUNTER -->
+    <Button
+        android:id="@+id/button_menu_cheese_counter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/rounded_button"
+        android:text="Cheese Counter"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_menu_upload_profile_picture" />
+
+    <!-- NAVIGATION MENU -->
+    <Button
+        android:id="@+id/button_menu_navigation_menu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/rounded_button"
+        android:text="Navigation Menu"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_menu_cheese_counter" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

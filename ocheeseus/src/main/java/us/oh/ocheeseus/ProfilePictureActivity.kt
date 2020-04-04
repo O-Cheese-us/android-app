@@ -11,9 +11,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_menu.*
 import kotlinx.android.synthetic.main.activity_profile_picture.*
-import kotlinx.android.synthetic.main.activity_register.*
 import us.oh.ocheeseus.data.*
 import java.util.*
 
