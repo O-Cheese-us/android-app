@@ -1,7 +1,5 @@
 package us.oh.ocheeseus.data
 
-import android.net.Uri
-
 const val COLLECTION_USERS = "users"
 
 const val USER_UID = "uid"

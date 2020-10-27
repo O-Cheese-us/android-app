@@ -42,6 +42,31 @@ class ProfilePictureActivity : AppCompatActivity() {
                 uploadImageToFirebaseStorage(selectedPhotoUri!!)
             }
         }
+
+        loadCurrentProfilePicture()
+    }
+
+    private fun loadCurrentProfilePicture(){
+            val docRef = db.collection(COLLECTION_USERS).document(auth.uid.toString())
+
+            docRef.addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed: ", e)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()){
+                    Log.d(TAG, "Found existing profile picture for user ${auth.uid}: ${snapshot.data}")
+                    var user = snapshot.toObject(User::class.java)
+                    if (!user?.profilePictureUrl.isNullOrEmpty()){
+                        val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, Uri.parse(user?.profilePictureUrl))
+                        imageview_profilePicture_profilePicture.setImageBitmap(bitmap)
+                        button_profilePicture_select.alpha = 0f
+                    }
+                } else {
+                    Log.d(TAG, "User hasn't set a profile picture yet. Show button.")
+                }
+            }
     }
 
 
@@ -56,7 +81,6 @@ class ProfilePictureActivity : AppCompatActivity() {
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
             imageview_profilePicture_profilePicture.setImageBitmap(bitmap)
             button_profilePicture_select.alpha = 0f
-
         }
     }
 
@@ -83,7 +107,6 @@ class ProfilePictureActivity : AppCompatActivity() {
             }.addOnFailureListener {
                     e -> Log.w(TAG, "Error writing document", e)
             }
-
     }
 
     private fun updateUserProfilePictureInForeStore(profilePictureUrl: String) {
