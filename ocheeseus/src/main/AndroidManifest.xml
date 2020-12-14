@@ -22,7 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="us.oh.ocheeseus.HodenActivity" />
         <activity android:name="us.oh.ocheeseus.CounterActivity" />
         <activity
             android:name="us.oh.ocheeseus.HomeActivity"
