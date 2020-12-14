@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_username.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 
-private const val TAG = "CounterActivity"
+private const val TAG = "UsernameActivity"
 
 class UsernameActivity : AppCompatActivity() {
 
@@ -28,14 +28,9 @@ class UsernameActivity : AppCompatActivity() {
         button_userName_generateRandom.isEnabled = false
         Toast.makeText(this, "Griazzdi Username!", Toast.LENGTH_SHORT).show()
 
-
         initCheeseTagCollections(object: CheeseTagInitCallback {
-            override fun onCallback(
-                adjectivesLoaded: Boolean,
-                cheesesLoaded: Boolean,
-                nounsLoaded: Boolean
-            ) {
-                if (adjectivesLoaded && cheesesLoaded && nounsLoaded){
+            override fun onCallback() {
+                if (adjectiveList.isNotEmpty() && cheeseList.isNotEmpty() && nounList.isNotEmpty()){
                     Log.d(TAG, "All lists initialized!")
                     button_userName_generateRandom.isClickable = true
                     button_userName_generateRandom.isEnabled = true
@@ -54,63 +49,30 @@ class UsernameActivity : AppCompatActivity() {
     }
 
     interface CheeseTagInitCallback {
-        fun onCallback(adjectivesLoaded: Boolean, cheesesLoaded: Boolean, nounsLoaded: Boolean)
+        fun onCallback()
+    }
+
+    private fun retrieveCheeseTagCollection(collectionName: String, list: ArrayList<String>, callback: CheeseTagInitCallback){
+        val docRef = db.collection("cheese_tag_generator").document("cheese_tags")
+        docRef.collection(collectionName).get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                Log.d(TAG, "Found $collectionName entry: ${document.id}")
+                list.add(document.id)
+            }
+            callback.onCallback()
+        }.addOnFailureListener { exception ->
+            Log.w(TAG, "Unable to retrieve cheese tag generator $collectionName from Firestore: ", exception)
+        }
     }
 
     private fun initCheeseTagCollections(callback: CheeseTagInitCallback){
-
-        var adjectivesLoaded = false
-        var cheesesLoaded = false
-        var nounsLoaded = false
-
-        val docRef = db.collection("cheese_tag_generator").document("cheese_tags")
-
-        // Retrieve Adjectives
-        docRef.collection("adjectives").get().addOnSuccessListener { documents ->
-            for (document in documents) {
-                Log.d(TAG, "Found adjective ${document.id}")
-                adjectiveList.add(document.id)
-            }
-            adjectivesLoaded = true
-            callback.onCallback(adjectivesLoaded, cheesesLoaded, nounsLoaded)
-        }.addOnFailureListener { exception ->
-            Log.w(TAG, "Unable to retrieve cheese tag generator adjectives from Firestore: ", exception)
-        }
-
-        // Retrieve Cheeses
-        docRef.collection("cheeses").get().addOnSuccessListener { documents ->
-            for (document in documents) {
-                Log.d(TAG, "Found cheese ${document.id}")
-                cheeseList.add(document.id)
-            }
-            cheesesLoaded = true
-            callback.onCallback(adjectivesLoaded, cheesesLoaded, nounsLoaded)
-        }.addOnFailureListener { exception ->
-            Log.w(TAG, "Unable to retrieve cheese tag generator cheeses from Firestore: ", exception)
-        }
-
-        // Retrieve Nouns
-        docRef.collection("nouns").get().addOnSuccessListener { documents ->
-            for (document in documents) {
-                Log.d(TAG, "Found noun ${document.id}")
-                nounList.add(document.id)
-            }
-            nounsLoaded = true
-            callback.onCallback(adjectivesLoaded, cheesesLoaded, nounsLoaded)
-        }.addOnFailureListener { exception ->
-            Log.w(TAG, "Unable to retrieve cheese tag generator nouns from Firestore: ", exception)
-        }
+        retrieveCheeseTagCollection("adjectives", adjectiveList, callback)
+        retrieveCheeseTagCollection("cheeses", cheeseList, callback)
+        retrieveCheeseTagCollection("nouns", nounList, callback)
     }
 
     private fun generateRandomCheeseTag(): String {
-        if (adjectiveList.isEmpty() || cheeseList.isEmpty() || nounList.isEmpty()){
-            return "SomethingWentTerriblyWrong"
-        }
-        var adjective = adjectiveList.random()
-        var cheese = cheeseList.random()
-        var noun = nounList.random()
-
-        return adjective + cheese + noun
+        return adjectiveList.random() + cheeseList.random() + nounList.random()
     }
 
 }
