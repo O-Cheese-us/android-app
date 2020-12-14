@@ -1,14 +1,14 @@
 package us.oh.ocheeseus
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.google.android.gms.common.internal.FallbackServiceBroker
-import com.google.firebase.firestore.DocumentSnapshot
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_username.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 private const val TAG = "UsernameActivity"
@@ -34,11 +34,13 @@ class UsernameActivity : AppCompatActivity() {
                     Log.d(TAG, "All lists initialized!")
                     button_userName_generateRandom.isClickable = true
                     button_userName_generateRandom.isEnabled = true
-                    var cheeseTag = generateRandomCheeseTag()
-                    edittext_userName_cheeseTag.setText(cheeseTag)
+                    var randomKasimir = generateAvailableRandomCheeseTag()
+                    edittext_userName_cheeseTag.setText(randomKasimir)
+
+
                     button_userName_generateRandom.setOnClickListener {
-                        cheeseTag = generateRandomCheeseTag()
-                        edittext_userName_cheeseTag.setText(cheeseTag)
+                        randomKasimir = generateAvailableRandomCheeseTag()
+                        edittext_userName_cheeseTag.setText(randomKasimir)
                     }
                 } else {
                     Log.d(TAG, "Not all lists initialized yet.")
@@ -52,6 +54,25 @@ class UsernameActivity : AppCompatActivity() {
         fun onCallback()
     }
 
+    interface CheeseTagAvailableCallback {
+        fun onCallback(isAvailable: Boolean)
+    }
+
+    private fun isCheeseTagAvailable(cheeseTag: String): Boolean {
+        val docRef = db.collection("users").whereEqualTo("cheeseTag", cheeseTag)
+        docRef.get().addOnSuccessListener { documents ->
+                if (documents.isEmpty){
+                    Log.d(TAG, "true")
+                } else {
+                    Log.d(TAG, "false")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Unable to check whether cheese tag $cheeseTag is available: ", e)
+            }
+        return true
+    }
+
     private fun retrieveCheeseTagCollection(collectionName: String, list: ArrayList<String>, callback: CheeseTagInitCallback){
         val docRef = db.collection("cheese_tag_generator").document("cheese_tags")
         docRef.collection(collectionName).get().addOnSuccessListener { documents ->
@@ -60,8 +81,8 @@ class UsernameActivity : AppCompatActivity() {
                 list.add(document.id)
             }
             callback.onCallback()
-        }.addOnFailureListener { exception ->
-            Log.w(TAG, "Unable to retrieve cheese tag generator $collectionName from Firestore: ", exception)
+        }.addOnFailureListener { e ->
+            Log.w(TAG, "Unable to retrieve cheese tag generator $collectionName from Firestore: ", e)
         }
     }
 
@@ -69,6 +90,42 @@ class UsernameActivity : AppCompatActivity() {
         retrieveCheeseTagCollection("adjectives", adjectiveList, callback)
         retrieveCheeseTagCollection("cheeses", cheeseList, callback)
         retrieveCheeseTagCollection("nouns", nounList, callback)
+    }
+
+    private suspend fun isCheesyCheeseReallyCheesy(cheeseTag: String): Boolean {
+
+        if (cheeseTag.isEmpty()){
+            return false
+        }
+
+
+        var isNameAvailable = true
+        val docRef = db.collection("users").whereEqualTo("cheeseTag", cheeseTag)
+
+        runBlocking {
+            var result = docRef.get().await().documents
+            if (result.isNotEmpty()){
+                isNameAvailable = false
+                Log.d(TAG, "Ja leckst mi am Orsch, es gibt scho an User der $cheeseTag hoasst!")
+            }
+        }
+
+        return isNameAvailable
+    }
+
+    private fun generateAvailableRandomCheeseTag() : String {
+        var currentCheeseTag = ""
+        GlobalScope.launch {
+            while (!isCheesyCheeseReallyCheesy(currentCheeseTag)) {
+                currentCheeseTag = generateRandomCheeseTag()
+            }
+        }
+
+        while (currentCheeseTag.isEmpty()){
+            Log.d(TAG ,"OMG I am stuck in a loop, how annoying is that!")
+        }
+
+        return currentCheeseTag;
     }
 
     private fun generateRandomCheeseTag(): String {
